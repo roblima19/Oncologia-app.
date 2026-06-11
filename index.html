@@ -9,7 +9,7 @@ ba(30,47,151,0.12)<!DOCTYPE html
  
   :root {
     --teal-dark: #1e2f97;
-    --teal; #1e2f97;
+    --teal: #1e2f97;
     --teal-light: #eaecfb;
     --teal-mid: #b0b8ef;
     --white: #ffffff;
@@ -328,7 +328,7 @@ ba(30,47,151,0.12)<!DOCTYPE html
     font-family: 'Inter', sans-serif;
     color: var(--gray-800);
     background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238fa8a8' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") no-repeat 12px center;
-    outline: none;
+    outline: none!important;
     transition: border 0.15s;
   }
  
@@ -391,7 +391,7 @@ ba(30,47,151,0.12)<!DOCTYPE html
     font-size: 13.5px;
     font-family: 'Inter', sans-serif;
     color: var(--gray-800);
-    outline: none;
+    outline: none!important;
     transition: border 0.15s;
     background: white;
   }
@@ -541,7 +541,7 @@ ba(30,47,151,0.12)<!DOCTYPE html
     <div class="topbar-title" id="topbarTitle">Dashboard</div>
     <div class="topbar-actions">
       <button class="btn btn-primary" onclick="openModal('novoModal')">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+         <span style="font-size:18px;font-weight:bold;">+</span>
         Novo Paciente
       </button>
     </div>
