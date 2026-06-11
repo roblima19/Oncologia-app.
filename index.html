@@ -1,0 +1,1055 @@
+ba(30,47,151,0.12)<!DOCTYPE html
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oncologia App— Gestão de Pacientes</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap');
+ 
+  :root {
+    --teal-dark: #1e2f97;
+    --teal; #1e2f97;
+    --teal-light: #eaecfb;
+    --teal-mid: #b0b8ef;
+    --white: #ffffff;
+    --gray-50: #f8f8fc;
+    --gray-100: #f0f1f8;
+    --gray-200: #dcdff0;
+    --gray-400: #8f94c0;
+    --gray-600: #4a4f80;
+    --gray-800: #1a1e3a;
+    --red: #e05252;
+    --red-light: #fdf0f0;
+    --green: #2da882;
+    --green-light: #edfaf5;
+    --amber: #d4870a;
+    --amber-light: #fef7ec;
+    --shadow-sm: 0 1px 3px rgba(10,107,107,0.08);
+    --shadow: 0 4px 16px rgba(10,107,107,0.12);
+    --shadow-lg: 0 8px 32px rgba(10,107,107,0.16);
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+ 
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--gray-50);
+    color: var(--gray-800);
+    min-height: 100vh;
+    display: flex;
+  }
+ 
+  /* SIDEBAR */
+  .sidebar {
+    width: 240px;
+    background: #1e2f97;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    z-index: 100;
+  }
+ 
+  .sidebar-logo {
+    padding: 24px 20px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+ 
+  .sidebar-logo h1 {
+    font-family: 'DM Serif Display', serif;
+    color: var(--white);
+    font-size: 22px;
+    letter-spacing: -0.3px;
+  }
+ 
+  .sidebar-logo span {
+    color: var(--teal-mid);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    display: block;
+    margin-top: 2px;
+  }
+ 
+  .sidebar-nav {
+    padding: 16px 12px;
+    flex: 1;
+  }
+ 
+  .nav-section-label {
+    color: #ffffffaa;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    padding: 8px 8px 6px;
+    margin-top: 8px;
+  }
+ 
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    color: #ffffff;
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-bottom: 2px;
+  }
+ 
+  .nav-item:hover { background: rgba(255,255,255,0.08); color: white; }
+  .nav-item.active { background: rgba(255,255,255,0.15); color: white; }
+ 
+  .nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+ 
+  .sidebar-user {
+    padding: 16px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+ 
+  .user-avatar {
+    width: 34px; height: 34px;
+    background: var(--teal);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 600; color: white;
+    flex-shrink: 0;
+  }
+ 
+  .user-info { flex: 1; min-width: 0; }
+  .user-name { color: white; font-size: 13px; font-weight: 500; }
+  .user-role { color: rgba(255,255,255,0.45); font-size: 11px; }
+ 
+  /* MAIN */
+  .main {
+    margin-left: 240px;
+    flex: 1;
+    min-height: 100vh;
+  }
+ 
+  /* TOPBAR */
+  .topbar {
+    background: white;
+    border-bottom: 1px solid var(--gray-200);
+    padding: 0 28px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky; top: 0; z-index: 50;
+  }
+ 
+  .topbar-title { font-size: 16px; font-weight: 600; color: var(--gray-800); }
+ 
+  .topbar-actions { display: flex; align-items: center; gap: 10px; }
+ 
+  .btn {
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+ 
+  .btn-primary { background: var(--teal); color: white; }
+  .btn-primary:hover { background: #1e2f97; }
+  .btn-ghost { background: transparent; color: var(--gray-600); border: 1px solid var(--gray-200); }
+  .btn-ghost:hover { background: var(--gray-100); }
+ 
+  /* CONTENT */
+  .content { padding: 28px; }
+ 
+  /* SCREEN MANAGEMENT */
+  .screen { display: none; }
+  .screen.active { display: block; }
+ 
+  /* DASHBOARD */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+ 
+  .stat-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--gray-200);
+    position: relative;
+    overflow: hidden;
+  }
+ 
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+ 
+  .stat-card.teal::before { background: var(--teal); }
+  .stat-card.green::before { background: var(--green); }
+  .stat-card.amber::before { background: var(--amber); }
+  .stat-card.red::before { background: var(--red); }
+ 
+  .stat-label { font-size: 11px; font-weight: 600; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
+  .stat-value { font-size: 32px; font-weight: 700; color: var(--gray-800); line-height: 1; margin-bottom: 6px; }
+  .stat-sub { font-size: 12px; color: var(--gray-400); }
+ 
+  .stat-icon {
+    position: absolute;
+    top: 16px; right: 16px;
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+  }
+ 
+  .stat-icon.teal { background: var(--teal-light); color: var(--teal); }
+  .stat-icon.green { background: var(--green-light); color: var(--green); }
+  .stat-icon.amber { background: var(--amber-light); color: var(--amber); }
+  .stat-icon.red { background: var(--red-light); color: var(--red); }
+ 
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 20px;
+  }
+ 
+  .card {
+    background: white;
+    border-radius: var(--radius);
+    border: 1px solid var(--gray-200);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+  }
+ 
+  .card-header {
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--gray-100);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+ 
+  .card-title { font-size: 14px; font-weight: 600; color: var(--gray-800); }
+  .card-body { padding: 0; }
+ 
+  /* TABLE */
+  table { width: 100%; border-collapse: collapse; }
+  thead th {
+    background: var(--gray-50);
+    padding: 10px 20px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--gray-400);
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    text-align: left;
+    border-bottom: 1px solid var(--gray-100);
+  }
+ 
+  tbody tr { border-bottom: 1px solid var(--gray-100); transition: background 0.1s; cursor: pointer; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--teal-light); }
+ 
+  td { padding: 12px 20px; font-size: 13.5px; color: var(--gray-800); vertical-align: middle; }
+ 
+  .patient-name-cell { display: flex; align-items: center; gap: 10px; }
+  .avatar-sm {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: var(--teal-light);
+    color: var(--teal-dark);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; flex-shrink: 0;
+  }
+ 
+  .badge {
+    display: inline-flex; align-items: center;
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+ 
+  .badge-green { background: var(--green-light); color: var(--green); }
+  .badge-amber { background: var(--amber-light); color: var(--amber); }
+  .badge-red { background: var(--red-light); color: var(--red); }
+  .badge-teal { background: var(--teal-light); color: var(--teal-dark); }
+ 
+  /* RECENT ACTIVITY */
+  .activity-list { padding: 8px 0; }
+  .activity-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--gray-100);
+  }
+  .activity-item:last-child { border-bottom: none; }
+ 
+  .activity-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    margin-top: 5px; flex-shrink: 0;
+  }
+ 
+  .activity-dot.green { background: var(--green); }
+  .activity-dot.teal { background: var(--teal); }
+  .activity-dot.amber { background: var(--amber); }
+ 
+  .activity-text { font-size: 13px; color: var(--gray-800); line-height: 1.4; }
+  .activity-time { font-size: 11px; color: var(--gray-400); margin-top: 2px; }
+ 
+  /* PATIENTS LIST */
+  .search-bar {
+    display: flex; gap: 10px;
+    margin-bottom: 20px;
+  }
+ 
+  .search-input {
+    flex: 1;
+    padding: 9px 14px 9px 36px;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    font-size: 13.5px;
+    font-family: 'Inter', sans-serif;
+    color: var(--gray-800);
+    background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238fa8a8' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") no-repeat 12px center;
+    outline: none;
+    transition: border 0.15s;
+  }
+ 
+  .search-input:focus { border-color: var(--teal); }
+ 
+  /* MODAL / FORM */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(10,107,107,0.2);
+    backdrop-filter: blur(2px);
+    z-index: 200;
+    align-items: center; justify-content: center;
+  }
+ 
+  .modal-overlay.open { display: flex; }
+ 
+  .modal {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    width: 560px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+ 
+  .modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--gray-100);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+ 
+  .modal-title { font-size: 15px; font-weight: 600; }
+ 
+  .modal-close {
+    width: 28px; height: 28px;
+    border: none; background: var(--gray-100);
+    border-radius: 6px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--gray-600); font-size: 16px;
+    transition: background 0.15s;
+  }
+ 
+  .modal-close:hover { background: var(--gray-200); }
+ 
+  .modal-body { padding: 24px; }
+ 
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-grid.full { grid-template-columns: 1fr; }
+ 
+  .form-group { display: flex; flex-direction: column; gap: 5px; }
+  .form-group.full { grid-column: 1 / -1; }
+ 
+  label { font-size: 12px; font-weight: 600; color: var(--gray-600); }
+ 
+  input, select, textarea {
+    padding: 9px 12px;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    font-size: 13.5px;
+    font-family: 'Inter', sans-serif;
+    color: var(--gray-800);
+    outline: none;
+    transition: border 0.15s;
+    background: white;
+  }
+ 
+  input:focus, select:focus, textarea:focus { border-color: var(--teal); }
+  textarea { resize: vertical; min-height: 80px; }
+ 
+  .modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--gray-100);
+    display: flex; justify-content: flex-end; gap: 10px;
+  }
+ 
+  /* PATIENT DETAIL */
+  .detail-header {
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-sm);
+    display: flex; align-items: center; gap: 20px;
+  }
+ 
+  .detail-avatar {
+    width: 60px; height: 60px;
+    background: var(--teal-light);
+    color: var(--teal-dark);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 700; flex-shrink: 0;
+  }
+ 
+  .detail-info { flex: 1; }
+  .detail-name { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+  .detail-meta { display: flex; gap: 16px; flex-wrap: wrap; }
+  .detail-meta span { font-size: 13px; color: var(--gray-600); }
+ 
+  .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+ 
+  .info-card {
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+  }
+ 
+  .info-card-header {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--gray-100);
+    font-size: 13px; font-weight: 600; color: var(--gray-800);
+    background: var(--gray-50);
+  }
+ 
+  .info-card-body { padding: 16px 18px; }
+ 
+  .info-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+  .info-row:last-child { margin-bottom: 0; }
+  .info-key { font-size: 12px; color: var(--gray-400); font-weight: 500; }
+  .info-val { font-size: 13px; color: var(--gray-800); font-weight: 500; text-align: right; max-width: 60%; }
+ 
+  .timeline { padding: 16px 18px; }
+  .timeline-item { display: flex; gap: 14px; margin-bottom: 16px; }
+  .timeline-item:last-child { margin-bottom: 0; }
+ 
+  .timeline-line-wrap { display: flex; flex-direction: column; align-items: center; }
+  .timeline-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--teal);
+    flex-shrink: 0; margin-top: 3px;
+  }
+  .timeline-line { width: 2px; flex: 1; background: var(--gray-200); margin-top: 4px; }
+ 
+  .timeline-content { flex: 1; padding-bottom: 16px; }
+  .timeline-date { font-size: 11px; color: var(--gray-400); font-weight: 600; margin-bottom: 4px; }
+  .timeline-desc { font-size: 13px; color: var(--gray-800); }
+ 
+  /* RESPONSIVE INDICATORS */
+  .dias-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: var(--teal-light); color: var(--teal-dark);
+    padding: 2px 8px; border-radius: 20px;
+    font-size: 11px; font-weight: 600;
+  }
+ 
+  /* EMPTY STATE */
+  .empty-state {
+    text-align: center;
+    padding: 48px 20px;
+    color: var(--gray-400);
+  }
+  .empty-state svg { margin-bottom: 12px; opacity: 0.4; }
+  .empty-state p { font-size: 14px; }
+ 
+  /* BACK BUTTON */
+  .back-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--teal-dark); font-size: 13px; font-weight: 600;
+    cursor: pointer; margin-bottom: 16px;
+    background: none; border: none; padding: 0;
+  }
+  .back-btn:hover { text-decoration: underline; }
+ 
+  .section-gap { margin-bottom: 20px; }
+</style>
+</head>
+<body>
+ 
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <h1>Oncologia App</h1>
+    <span>Gestão de Pacientes</span>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Principal</div>
+    <div class="nav-item active" onclick="showScreen('dashboard')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </div>
+    <div class="nav-item" onclick="showScreen('pacientes')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Pacientes
+    </div>
+    <div class="nav-section-label">Relatórios</div>
+    <div class="nav-item" onclick="showScreen('altas')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Altas e Internações
+    </div>
+  </nav>
+  <div class="sidebar-user">
+    <div class="user-avatar">AD</div>
+    <div class="user-info">
+      <div class="user-name">Administrador</div>
+      <div class="user-role">Admin</div>
+    </div>
+  </div>
+</aside>
+ 
+<!-- MAIN -->
+<main class="main">
+ 
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-title" id="topbarTitle">Dashboard</div>
+    <div class="topbar-actions">
+      <button class="btn btn-primary" onclick="openModal('novoModal')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Novo Paciente
+      </button>
+    </div>
+  </div>
+ 
+  <!-- DASHBOARD SCREEN -->
+  <div class="content screen active" id="screen-dashboard">
+    <div class="stats-grid">
+      <div class="stat-card teal">
+        <div class="stat-icon teal">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        </div>
+        <div class="stat-label">Total de Pacientes</div>
+        <div class="stat-value">48</div>
+        <div class="stat-sub">Cadastrados no sistema</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-icon green">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="stat-label">Em Atendimento</div>
+        <div class="stat-value">12</div>
+        <div class="stat-sub">Pacientes ativos hoje</div>
+      </div>
+      <div class="stat-card amber">
+        <div class="stat-icon amber">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <div class="stat-label">Altas este Mês</div>
+        <div class="stat-value">7</div>
+        <div class="stat-sub">Em junho de 2026</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-icon red">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <div class="stat-label">Tempo Médio</div>
+        <div class="stat-value">14d</div>
+        <div class="stat-sub">Dias de internação</div>
+      </div>
+    </div>
+ 
+    <div class="dashboard-grid">
+      <!-- Pacientes Recentes -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Pacientes em Atendimento</div>
+          <button class="btn btn-ghost" onclick="showScreen('pacientes')" style="padding:5px 10px;font-size:12px;">Ver todos</button>
+        </div>
+        <div class="card-body">
+          <table>
+            <thead>
+              <tr>
+                <th>Paciente</th>
+                <th>Entrada</th>
+                <th>Dias</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr onclick="showPatient(0)">
+                <td><div class="patient-name-cell"><div class="avatar-sm">MO</div>Maria Oliveira</div></td>
+                <td>02/06/2026</td>
+                <td><span class="dias-badge">7 dias</span></td>
+                <td><span class="badge badge-green">Em atendimento</span></td>
+              </tr>
+              <tr onclick="showPatient(1)">
+                <td><div class="patient-name-cell"><div class="avatar-sm">JS</div>João Santos</div></td>
+                <td>28/05/2026</td>
+                <td><span class="dias-badge">12 dias</span></td>
+                <td><span class="badge badge-amber">Observação</span></td>
+              </tr>
+              <tr onclick="showPatient(2)">
+                <td><div class="patient-name-cell"><div class="avatar-sm">AL</div>Ana Lima</div></td>
+                <td>05/06/2026</td>
+                <td><span class="dias-badge">4 dias</span></td>
+                <td><span class="badge badge-green">Em atendimento</span></td>
+              </tr>
+              <tr onclick="showPatient(3)">
+                <td><div class="patient-name-cell"><div class="avatar-sm">CF</div>Carlos Ferreira</div></td>
+                <td>01/06/2026</td>
+                <td><span class="dias-badge">8 dias</span></td>
+                <td><span class="badge badge-red">Alta prevista</span></td>
+              </tr>
+              <tr onclick="showPatient(4)">
+                <td><div class="patient-name-cell"><div class="avatar-sm">PR</div>Paula Ribeiro</div></td>
+                <td>30/05/2026</td>
+                <td><span class="dias-badge">10 dias</span></td>
+                <td><span class="badge badge-green">Em atendimento</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+ 
+      <!-- Atividade Recente -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Atividade Recente</div>
+        </div>
+        <div class="activity-list">
+          <div class="activity-item">
+            <div class="activity-dot green"></div>
+            <div>
+              <div class="activity-text">Alta registrada para <strong>Roberto Alves</strong></div>
+              <div class="activity-time">Hoje, 09:42</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot teal"></div>
+            <div>
+              <div class="activity-text">Novo paciente: <strong>Fernanda Costa</strong></div>
+              <div class="activity-time">Hoje, 08:15</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot teal"></div>
+            <div>
+              <div class="activity-text">Cadastro atualizado: <strong>João Santos</strong></div>
+              <div class="activity-time">Ontem, 16:30</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot amber"></div>
+            <div>
+              <div class="activity-text">Observação adicionada: <strong>Ana Lima</strong></div>
+              <div class="activity-time">Ontem, 14:00</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot green"></div>
+            <div>
+              <div class="activity-text">Alta registrada para <strong>Marcos Pereira</strong></div>
+              <div class="activity-time">07/06/2026</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot teal"></div>
+            <div>
+              <div class="activity-text">Novo paciente: <strong>Carlos Ferreira</strong></div>
+              <div class="activity-time">01/06/2026</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- PACIENTES SCREEN -->
+  <div class="content screen" id="screen-pacientes">
+    <div class="search-bar">
+      <input class="search-input" type="text" placeholder="Buscar por nome, CPF ou data...">
+      <button class="btn btn-ghost">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+        Filtrar
+      </button>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Todos os Pacientes</div>
+        <span style="font-size:12px;color:var(--gray-400);">48 pacientes</span>
+      </div>
+      <div class="card-body">
+        <table>
+          <thead>
+            <tr>
+              <th>Paciente</th>
+              <th>CPF</th>
+              <th>Data de Entrada</th>
+              <th>Data de Alta</th>
+              <th>Dias</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr onclick="showPatient(0)">
+              <td><div class="patient-name-cell"><div class="avatar-sm">MO</div>Maria Oliveira</div></td>
+              <td style="color:var(--gray-400)">123.456.789-00</td>
+              <td>02/06/2026</td>
+              <td>—</td>
+              <td><span class="dias-badge">7 dias</span></td>
+              <td><span class="badge badge-green">Em atendimento</span></td>
+            </tr>
+            <tr onclick="showPatient(1)">
+              <td><div class="patient-name-cell"><div class="avatar-sm">JS</div>João Santos</div></td>
+              <td style="color:var(--gray-400)">987.654.321-00</td>
+              <td>28/05/2026</td>
+              <td>—</td>
+              <td><span class="dias-badge">12 dias</span></td>
+              <td><span class="badge badge-amber">Observação</span></td>
+            </tr>
+            <tr onclick="showPatient(2)">
+              <td><div class="patient-name-cell"><div class="avatar-sm">AL</div>Ana Lima</div></td>
+              <td style="color:var(--gray-400)">456.789.123-00</td>
+              <td>05/06/2026</td>
+              <td>—</td>
+              <td><span class="dias-badge">4 dias</span></td>
+              <td><span class="badge badge-green">Em atendimento</span></td>
+            </tr>
+            <tr onclick="showPatient(3)">
+              <td><div class="patient-name-cell"><div class="avatar-sm">CF</div>Carlos Ferreira</div></td>
+              <td style="color:var(--gray-400)">321.654.987-00</td>
+              <td>01/06/2026</td>
+              <td>—</td>
+              <td><span class="dias-badge">8 dias</span></td>
+              <td><span class="badge badge-red">Alta prevista</span></td>
+            </tr>
+            <tr onclick="showPatient(4)">
+              <td><div class="patient-name-cell"><div class="avatar-sm">PR</div>Paula Ribeiro</div></td>
+              <td style="color:var(--gray-400)">654.321.098-00</td>
+              <td>30/05/2026</td>
+              <td>—</td>
+              <td><span class="dias-badge">10 dias</span></td>
+              <td><span class="badge badge-green">Em atendimento</span></td>
+            </tr>
+            <tr onclick="showPatient(5)">
+              <td><div class="patient-name-cell"><div class="avatar-sm">RA</div>Roberto Alves</div></td>
+              <td style="color:var(--gray-400)">111.222.333-00</td>
+              <td>20/05/2026</td>
+              <td>09/06/2026</td>
+              <td><span class="dias-badge">20 dias</span></td>
+              <td><span class="badge badge-teal">Alta dada</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- PATIENT DETAIL SCREEN -->
+  <div class="content screen" id="screen-detalhe">
+    <button class="back-btn" onclick="goBack()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+      Voltar
+    </button>
+ 
+    <div class="detail-header">
+      <div class="detail-avatar" id="detailAvatar">MO</div>
+      <div class="detail-info">
+        <div class="detail-name" id="detailName">Maria Oliveira</div>
+        <div class="detail-meta">
+          <span id="detailCpf">CPF: 123.456.789-00</span>
+          <span id="detailNasc">Nasc: 12/03/1975</span>
+          <span id="detailTel">Tel: (11) 99999-0000</span>
+        </div>
+      </div>
+      <div>
+        <span class="badge badge-green" id="detailStatus">Em atendimento</span>
+      </div>
+    </div>
+ 
+    <div class="detail-grid">
+      <div>
+        <div class="info-card section-gap">
+          <div class="info-card-header">Dados Pessoais</div>
+          <div class="info-card-body">
+            <div class="info-row"><span class="info-key">Nome completo</span><span class="info-val" id="dp-nome">Maria Oliveira</span></div>
+            <div class="info-row"><span class="info-key">CPF</span><span class="info-val" id="dp-cpf">123.456.789-00</span></div>
+            <div class="info-row"><span class="info-key">Data de nascimento</span><span class="info-val" id="dp-nasc">12/03/1975</span></div>
+            <div class="info-row"><span class="info-key">Telefone</span><span class="info-val" id="dp-tel">(11) 99999-0000</span></div>
+            <div class="info-row"><span class="info-key">Endereço</span><span class="info-val" id="dp-end">Rua das Flores, 123 - SP</span></div>
+            <div class="info-row"><span class="info-key">Responsável</span><span class="info-val" id="dp-resp">José Oliveira</span></div>
+          </div>
+        </div>
+ 
+        <div class="info-card">
+          <div class="info-card-header">Internação</div>
+          <div class="info-card-body">
+            <div class="info-row"><span class="info-key">Data de entrada</span><span class="info-val" id="dp-entrada">02/06/2026</span></div>
+            <div class="info-row"><span class="info-key">Data de alta</span><span class="info-val" id="dp-alta">—</span></div>
+            <div class="info-row"><span class="info-key">Dias internada</span><span class="info-val"><span class="dias-badge" id="dp-dias">7 dias</span></span></div>
+            <div class="info-row"><span class="info-key">Enfermeira resp.</span><span class="info-val" id="dp-enf">Enf. Carla Souza</span></div>
+          </div>
+        </div>
+      </div>
+ 
+      <div>
+        <div class="info-card" style="height:100%">
+          <div class="info-card-header">Histórico de Atendimento</div>
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-line-wrap"><div class="timeline-dot"></div><div class="timeline-line"></div></div>
+              <div class="timeline-content">
+                <div class="timeline-date">08/06/2026 — 14:30</div>
+                <div class="timeline-desc">Verificação de sinais vitais. Paciente estável.</div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-line-wrap"><div class="timeline-dot"></div><div class="timeline-line"></div></div>
+              <div class="timeline-content">
+                <div class="timeline-date">07/06/2026 — 09:00</div>
+                <div class="timeline-desc">Curativo realizado no membro inferior esquerdo.</div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-line-wrap"><div class="timeline-dot"></div><div class="timeline-line"></div></div>
+              <div class="timeline-content">
+                <div class="timeline-date">05/06/2026 — 11:00</div>
+                <div class="timeline-desc">Coleta de exames laboratoriais solicitada.</div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-line-wrap"><div class="timeline-dot" style="background:var(--green)"></div></div>
+              <div class="timeline-content">
+                <div class="timeline-date">02/06/2026 — 08:00</div>
+                <div class="timeline-desc">✅ Entrada registrada. Admissão realizada pela Enf. Carla Souza.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- ALTAS SCREEN -->
+  <div class="content screen" id="screen-altas">
+    <div class="stats-grid" style="grid-template-columns:repeat(3,1fr)">
+      <div class="stat-card green">
+        <div class="stat-icon green">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="stat-label">Altas este Mês</div>
+        <div class="stat-value">7</div>
+        <div class="stat-sub">Junho 2026</div>
+      </div>
+      <div class="stat-card teal">
+        <div class="stat-icon teal">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        </div>
+        <div class="stat-label">Internações este Mês</div>
+        <div class="stat-value">15</div>
+        <div class="stat-sub">Junho 2026</div>
+      </div>
+      <div class="stat-card amber">
+        <div class="stat-icon amber">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="stat-label">Tempo Médio de Alta</div>
+        <div class="stat-value">14d</div>
+        <div class="stat-sub">Média geral</div>
+      </div>
+    </div>
+ 
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Histórico de Altas</div>
+      </div>
+      <div class="card-body">
+        <table>
+          <thead>
+            <tr>
+              <th>Paciente</th>
+              <th>Data de Entrada</th>
+              <th>Data de Alta</th>
+              <th>Total de Dias</th>
+              <th>Enfermeira</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div class="patient-name-cell"><div class="avatar-sm">RA</div>Roberto Alves</div></td>
+              <td>20/05/2026</td>
+              <td>09/06/2026</td>
+              <td><span class="dias-badge">20 dias</span></td>
+              <td>Enf. Carla Souza</td>
+            </tr>
+            <tr>
+              <td><div class="patient-name-cell"><div class="avatar-sm">MP</div>Marcos Pereira</div></td>
+              <td>22/05/2026</td>
+              <td>07/06/2026</td>
+              <td><span class="dias-badge">16 dias</span></td>
+              <td>Enf. Ana Paula</td>
+            </tr>
+            <tr>
+              <td><div class="patient-name-cell"><div class="avatar-sm">LC</div>Lúcia Costa</div></td>
+              <td>25/05/2026</td>
+              <td>04/06/2026</td>
+              <td><span class="dias-badge">10 dias</span></td>
+              <td>Enf. Carla Souza</td>
+            </tr>
+            <tr>
+              <td><div class="patient-name-cell"><div class="avatar-sm">FM</div>Felipe Martins</div></td>
+              <td>18/05/2026</td>
+              <td>02/06/2026</td>
+              <td><span class="dias-badge">15 dias</span></td>
+              <td>Enf. Maria José</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+ 
+</main>
+ 
+<!-- MODAL: NOVO PACIENTE -->
+<div class="modal-overlay" id="novoModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Cadastrar Novo Paciente</div>
+      <button class="modal-close" onclick="closeModal('novoModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Nome completo *</label>
+          <input type="text" placeholder="Ex: Maria da Silva Oliveira">
+        </div>
+        <div class="form-group">
+          <label>CPF *</label>
+          <input type="text" placeholder="000.000.000-00">
+        </div>
+        <div class="form-group">
+          <label>Data de nascimento *</label>
+          <input type="date">
+        </div>
+        <div class="form-group">
+          <label>Telefone</label>
+          <input type="text" placeholder="(11) 99999-9999">
+        </div>
+        <div class="form-group">
+          <label>Nome do responsável</label>
+          <input type="text" placeholder="Nome do responsável">
+        </div>
+        <div class="form-group full">
+          <label>Endereço</label>
+          <input type="text" placeholder="Rua, número, bairro, cidade">
+        </div>
+        <div class="form-group">
+          <label>Data de entrada *</label>
+          <input type="date">
+        </div>
+        <div class="form-group">
+          <label>Enfermeira responsável</label>
+          <select>
+            <option>Enf. Carla Souza</option>
+            <option>Enf. Ana Paula</option>
+            <option>Enf. Maria José</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label>Observações iniciais</label>
+          <textarea placeholder="Anotações sobre a admissão do paciente..."></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('novoModal')">Cancelar</button>
+      <button class="btn btn-primary" onclick="closeModal('novoModal')">Salvar Paciente</button>
+    </div>
+  </div>
+</div>
+ 
+<script>
+  const patients = [
+    { name: 'Maria Oliveira', initials: 'MO', cpf: '123.456.789-00', nasc: '12/03/1975', tel: '(11) 99999-0000', end: 'Rua das Flores, 123 - SP', resp: 'José Oliveira', entrada: '02/06/2026', alta: '—', dias: '7 dias', enf: 'Enf. Carla Souza', status: 'Em atendimento', statusClass: 'badge-green' },
+    { name: 'João Santos', initials: 'JS', cpf: '987.654.321-00', nasc: '05/07/1960', tel: '(11) 88888-1111', end: 'Av. Paulista, 456 - SP', resp: 'Marta Santos', entrada: '28/05/2026', alta: '—', dias: '12 dias', enf: 'Enf. Ana Paula', status: 'Observação', statusClass: 'badge-amber' },
+    { name: 'Ana Lima', initials: 'AL', cpf: '456.789.123-00', nasc: '22/11/1988', tel: '(11) 77777-2222', end: 'Rua Augusta, 789 - SP', resp: 'Pedro Lima', entrada: '05/06/2026', alta: '—', dias: '4 dias', enf: 'Enf. Carla Souza', status: 'Em atendimento', statusClass: 'badge-green' },
+    { name: 'Carlos Ferreira', initials: 'CF', cpf: '321.654.987-00', nasc: '30/01/1952', tel: '(11) 66666-3333', end: 'Rua da Consolação, 321 - SP', resp: 'Lucia Ferreira', entrada: '01/06/2026', alta: '—', dias: '8 dias', enf: 'Enf. Maria José', status: 'Alta prevista', statusClass: 'badge-red' },
+    { name: 'Paula Ribeiro', initials: 'PR', cpf: '654.321.098-00', nasc: '14/08/1979', tel: '(11) 55555-4444', end: 'Rua Vergueiro, 654 - SP', resp: 'Marcos Ribeiro', entrada: '30/05/2026', alta: '—', dias: '10 dias', enf: 'Enf. Ana Paula', status: 'Em atendimento', statusClass: 'badge-green' },
+    { name: 'Roberto Alves', initials: 'RA', cpf: '111.222.333-00', nasc: '03/04/1965', tel: '(11) 44444-5555', end: 'Rua Bela Cintra, 111 - SP', resp: 'Fernanda Alves', entrada: '20/05/2026', alta: '09/06/2026', dias: '20 dias', enf: 'Enf. Carla Souza', status: 'Alta dada', statusClass: 'badge-teal' },
+  ];
+ 
+  let previousScreen = 'dashboard';
+ 
+  function showScreen(name) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('screen-' + name).classList.add('active');
+    const titles = { dashboard: 'Dashboard', pacientes: 'Pacientes', altas: 'Altas e Internações', detalhe: 'Detalhe do Paciente' };
+    document.getElementById('topbarTitle').textContent = titles[name] || name;
+    document.querySelectorAll('.nav-item').forEach(n => {
+      if (n.getAttribute('onclick') && n.getAttribute('onclick').includes(name)) n.classList.add('active');
+    });
+  }
+ 
+  function showPatient(index) {
+    previousScreen = document.querySelector('.screen.active').id.replace('screen-', '');
+    const p = patients[index];
+    document.getElementById('detailAvatar').textContent = p.initials;
+    document.getElementById('detailName').textContent = p.name;
+    document.getElementById('detailCpf').textContent = 'CPF: ' + p.cpf;
+    document.getElementById('detailNasc').textContent = 'Nasc: ' + p.nasc;
+    document.getElementById('detailTel').textContent = 'Tel: ' + p.tel;
+    document.getElementById('detailStatus').textContent = p.status;
+    document.getElementById('detailStatus').className = 'badge ' + p.statusClass;
+    document.getElementById('dp-nome').textContent = p.name;
+    document.getElementById('dp-cpf').textContent = p.cpf;
+    document.getElementById('dp-nasc').textContent = p.nasc;
+    document.getElementById('dp-tel').textContent = p.tel;
+    document.getElementById('dp-end').textContent = p.end;
+    document.getElementById('dp-resp').textContent = p.resp;
+    document.getElementById('dp-entrada').textContent = p.entrada;
+    document.getElementById('dp-alta').textContent = p.alta;
+    document.getElementById('dp-dias').textContent = p.dias;
+    document.getElementById('dp-enf').textContent = p.enf;
+    showScreen('detalhe');
+  }
+ 
+  function goBack() { showScreen(previousScreen); }
+ 
+  function openModal(id) { document.getElementById(id).classList.add('open'); }
+  function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+ 
+  document.querySelectorAll('.modal-overlay').forEach(m => {
+    m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+  });
+</script>
+</body>
+</html>
+ 
